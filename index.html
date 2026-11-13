@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Behind the Facade</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ==================================================================
+     This file is only the skeleton of the page. The visitor pages
+     (passport, stations, QR codes) are filled in by app.js using the
+     content in stations.js. The organiser guide below is plain HTML.
+     ================================================================== -->
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#passport" id="brand">Behind the Facade</a>
+    <a class="progress-pill" href="#passport" id="pill">0 / 0 stamps</a>
+  </div>
+</header>
+
+<!-- PASSPORT (start page) -->
+<main id="view-passport" class="view" hidden></main>
+
+<!-- STATION PAGE (one template for every station) -->
+<main id="view-station" class="view" hidden></main>
+
+<!-- QR CODES (for organisers) -->
+<main id="view-qr" class="view wide" hidden>
+  <a class="back" href="#guide">← How this site works</a>
+  <header class="mast">
+    <p class="eyebrow">For organisers</p>
+    <h1>QR code signs</h1>
+    <p class="lead">One sign per station. Each code opens that station's page, where visitors collect the stamp. Check the website address, test every code with a phone, then save the signs and print them.</p>
+  </header>
+  <div class="field">
+    <label for="qr-base">Website address</label>
+    <input type="url" id="qr-base" placeholder="https://our-group.github.io/behind-the-facade/" autocomplete="off" spellcheck="false">
+    <p class="hint" id="qr-hint"></p>
+  </div>
+  <div class="qr-grid" id="qr-grid"></div>
+</main>
+
+<!-- ORGANISER GUIDE -->
+<main id="view-guide" class="view wide guide" hidden>
+  <a class="back" href="#passport">← Passport</a>
+  <header class="mast">
+    <p class="eyebrow">For organisers</p>
+    <h1>How this site works</h1>
+    <p class="lead">Everything you need to change texts, add a station, design a stamp, make the QR codes and put the site online. You only ever edit one file: <code>stations.js</code>.</p>
+  </header>
+
+  <nav class="toc" aria-label="Contents">
+    <a href="#guide" data-jump="g-flow">The visit</a>
+    <a href="#guide" data-jump="g-files">The files</a>
+    <a href="#guide" data-jump="g-station">Add a station</a>
+    <a href="#guide" data-jump="g-stamps">Stamps</a>
+    <a href="#guide" data-jump="g-qr">QR codes</a>
+    <a href="#guide" data-jump="g-online">Put it online</a>
+    <a href="#guide" data-jump="g-test">Test</a>
+    <a href="#guide" data-jump="g-addons">Add-ons</a>
+  </nav>
+
+  <section id="g-flow">
+    <h2>The visit, step by step</h2>
+    <ol class="flow">
+      <li><span class="flow-k">Scan</span><span>A visitor scans the QR sign next to an exhibit with the phone camera.</span></li>
+      <li><span class="flow-k">Open</span><span>The phone opens <code>website-address#station-id</code>, for example <code>…/#pendulum</code>. The part after <code>#</code> tells the site which station to show.</span></li>
+      <li><span class="flow-k">Read</span><span>The station page shows photos and the explanation, and (optionally) a quiz or an interactive add-on.</span></li>
+      <li><span class="flow-k">Stamp</span><span>At the bottom the visitor taps <b>Stamp my passport</b>. The stamp is saved on the phone and appears in the passport.</span></li>
+    </ol>
+    <p>The passport is the start page (<code>#passport</code>). It shows all stamps grouped by building, the progress, and a map with every station.</p>
+    <div class="note"><b>Where are stamps stored?</b> In the visitor's browser (its "local storage"). There are no accounts and no server, so nothing is collected about visitors. The other side: stamps belong to one phone and one browser, and they disappear if the visitor clears the browser data or uses a private tab.</div>
+  </section>
+
+  <section id="g-files">
+    <h2>The files</h2>
+    <div class="scroll"><table class="files">
+      <thead><tr><th>File</th><th>What it does</th><th>Edit?</th></tr></thead>
+      <tbody>
+        <tr><td><code>stations.js</code></td><td>All content: general settings, buildings, stations, stamps, map positions.</td><td class="yes">Yes</td></tr>
+        <tr><td><code>images/</code></td><td>Photos of the exhibits (and optionally your own stamp pictures and floor plan).</td><td class="yes">Add files</td></tr>
+        <tr><td><code>widgets.js</code></td><td>Interactive add-ons for station pages, such as the pendulum time bar.</td><td>Later</td></tr>
+        <tr><td><code>style.css</code></td><td>Colours, fonts and layout. The colours are at the top.</td><td>Rarely</td></tr>
+        <tr><td><code>app.js</code></td><td>The logic: which page to show, saving stamps, drawing stamps, the map and the QR codes.</td><td>No</td></tr>
+        <tr><td><code>index.html</code></td><td>The page skeleton and this guide.</td><td>No</td></tr>
+        <tr><td><code>vendor/qrcode.js</code></td><td>Makes the QR codes (open-source library, works offline).</td><td>No</td></tr>
+      </tbody>
+    </table></div>
+    <p>To try it on your own computer, double-click <code>index.html</code>. It opens in the browser and works like the real site.</p>
+  </section>
+
+  <section id="g-station">
+    <h2>Add or change a station</h2>
+    <ol class="steps">
+      <li>Put the photos into the <code>images</code> folder. Keep them under about 300 KB each (phones load them over mobile data); 1400 pixels on the long side is plenty.</li>
+      <li>Open <code>stations.js</code> in a text editor (VS Code, Notepad++, or TextEdit in plain-text mode).</li>
+      <li>Copy one whole station block, from <code>{</code> to <code>},</code>, and paste it where it should appear in the route.</li>
+      <li>Change the fields. The id must be new and unique.</li>
+      <li>Save and reload the page. The new station appears in the passport and the map, and gets its own QR sign.</li>
+    </ol>
+    <p>A station block looks like this:</p>
+<pre class="code"><code>{
+  id: "pendulum",                 <i>// in the QR link: …/#pendulum, never change after printing</i>
+  building: "kip",                <i>// id of a building from the BUILDINGS list</i>
+  title: "Foucault's pendulum",   <i>// headline on the page</i>
+  teaser: "A brass ball that proves the Earth is turning.",
+  draft: true,                    <i>// shows a "draft text" label; remove when final</i>
+  photos: [
+    { src: "images/pendulum-1.jpg", caption: "The ball swings over a ring of pins." },
+    { src: "images/pendulum-2.jpg", caption: "A moment later." },
+  ],
+  sections: [
+    { heading: "What you see", text: "A heavy brass ball …" },
+    { heading: "What is going on", text: "First paragraph.\n\nSecond paragraph." },
+  ],
+  stamp: { shape: "circle", ink: "#2447a6", icon: "pendulum", label: "Pendulum" },
+  map: { x: 66, y: 52 },          <i>// dot on the map: x 0–100 (left→right), y 0–70 (top→bottom)</i>
+},</code></pre>
+    <h3>All fields</h3>
+    <div class="scroll"><table class="fields">
+      <thead><tr><th>Field</th><th>Meaning</th><th>Needed?</th></tr></thead>
+      <tbody>
+        <tr><td><code>id</code></td><td>Name in the QR link. Lowercase letters, digits and hyphens. Changing it breaks printed codes and already collected stamps.</td><td>Yes</td></tr>
+        <tr><td><code>building</code></td><td>Which building the station belongs to; groups the stamp in the passport.</td><td>Yes</td></tr>
+        <tr><td><code>title</code>, <code>teaser</code></td><td>Headline, and one line shown under it and in the map list.</td><td>Yes</td></tr>
+        <tr><td><code>photos</code></td><td>One or more photos. With several, tapping the photo shows the next one, so pictures of the same object at different moments make a simple before/after.</td><td>Yes</td></tr>
+        <tr><td><code>sections</code></td><td>The explanation in blocks of heading and text. <code>\n\n</code> starts a new paragraph.</td><td>Yes</td></tr>
+        <tr><td><code>stamp</code></td><td>Look of the stamp, see below.</td><td>Yes</td></tr>
+        <tr><td><code>map</code></td><td>Position of the station dot on the map.</td><td>Yes</td></tr>
+        <tr><td><code>draft</code></td><td><code>true</code> shows a small "draft text" label.</td><td>No</td></tr>
+        <tr><td><code>quiz</code></td><td>A question to answer before the stamp unlocks. <code>answer</code> is the position of the right option, counting from 0.</td><td>No</td></tr>
+        <tr><td><code>widget</code></td><td>An interactive add-on from <code>widgets.js</code>, with its settings.</td><td>No</td></tr>
+      </tbody>
+    </table></div>
+    <p>A <b>new building</b> works the same way: copy a line in the <code>BUILDINGS</code> list, give it a new id, and set where its block sits on the map.</p>
+  </section>
+
+  <section id="g-stamps">
+    <h2>Stamps</h2>
+    <p>Every stamp is drawn by the site from four settings, so you don't need to make any graphics. The date of the visit is printed on it automatically.</p>
+    <div class="scroll"><table class="fields">
+      <thead><tr><th>Setting</th><th>Options</th></tr></thead>
+      <tbody>
+        <tr><td><code>shape</code></td><td><code>"circle"</code>, <code>"hexagon"</code>, <code>"square"</code>, <code>"ticket"</code></td></tr>
+        <tr><td><code>ink</code></td><td>Any colour code, e.g. <code>"#2447a6"</code>. Medium-dark colours look most like real ink.</td></tr>
+        <tr><td><code>icon</code></td><td><code>"pendulum"</code>, <code>"field"</code>, <code>"detector"</code>, <code>"prism"</code>, <code>"neuron"</code>, <code>"printer"</code>, <code>"star"</code></td></tr>
+        <tr><td><code>label</code></td><td>The big word. Up to about 10 letters fits well.</td></tr>
+        <tr><td><code>image</code></td><td>Optional. Your own stamp picture (PNG with transparent background, or SVG), e.g. <code>"images/stamps/pendulum.png"</code>. It replaces the drawn stamp.</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Shapes and icons</h3>
+    <div class="gallery" id="stamp-gallery"></div>
+    <p class="hint">A new icon goes into the <code>ICONS</code> list at the top of <code>app.js</code>: a small drawing on a 24 × 24 grid in SVG path notation.</p>
+  </section>
+
+  <section id="g-qr">
+    <h2>Make the QR codes</h2>
+    <ol class="steps">
+      <li>Put the site online first (next section). A QR code made from an address on your own computer only works on your computer.</li>
+      <li>Write the public address into <code>url</code> at the top of <code>stations.js</code>, ending in <code>/</code>.</li>
+      <li>Open the <a href="#qr">QR code page</a>. It makes one sign per station, with the station name, building and code.</li>
+      <li>Scan every sign from the screen with a phone and check that the right station opens.</li>
+      <li>Save the signs (<b>Download</b> button, or right-click / long-press the image) and print them. The images are A6 at 300 dpi; at least 4 cm for the code itself scans reliably.</li>
+    </ol>
+    <div class="note"><b>Codes stay valid when texts change.</b> A code only contains the address and the station id. You can rewrite texts, swap photos and redesign stamps as often as you like without reprinting. Only changing the website address or an id needs new codes.</div>
+  </section>
+
+  <section id="g-online">
+    <h2>Put the site online</h2>
+    <p>The site is just a folder of files with no server and no database, so any free static hosting works. GitHub Pages is the simplest:</p>
+    <ol class="steps">
+      <li>Create a free account on github.com and a new public repository, e.g. <code>behind-the-facade</code>.</li>
+      <li>Click <b>Add file → Upload files</b> and drag in the whole content of this folder (<code>index.html</code>, the <code>.js</code> and <code>.css</code> files and the <code>images</code> and <code>vendor</code> folders).</li>
+      <li>Open <b>Settings → Pages</b>. Under "Branch", choose <code>main</code> and <code>/ (root)</code>, then save.</li>
+      <li>After a minute the site is live at <code>https://your-username.github.io/behind-the-facade/</code>. Put this address into <code>url</code> in <code>stations.js</code>.</li>
+      <li>To change anything later, edit the file on GitHub (pencil icon) or upload a new version. The site updates after about a minute.</li>
+    </ol>
+    <p class="hint">The university's own web space works the same way: upload the folder as it is.</p>
+  </section>
+
+  <section id="g-test">
+    <h2>Test before the trail opens</h2>
+    <ul class="checks">
+      <li>Every QR sign opens the right station on an iPhone and an Android phone.</li>
+      <li>Collecting a stamp works, and it is still there after closing and reopening the browser.</li>
+      <li>All photos load on mobile data, not only on Wi-Fi.</li>
+      <li>Texts are checked by someone from each institute; then remove <code>draft: true</code>.</li>
+      <li>The signs are allowed where you put them (ask the building management).</li>
+      <li>Use <b>Clear my stamps</b> at the bottom of the passport to start again.</li>
+    </ul>
+    <div class="note"><b>Visitors can cheat.</b> Anyone who types a station address gets the stamp without being there. For a campus trail that is fine. If it ever matters, a quiz about something only visible on site makes it harder.</div>
+  </section>
+
+  <section id="g-addons">
+    <h2>Add-ons, once the basics work</h2>
+    <p>Two kinds of interactivity are already built in, so you can try them on single stations:</p>
+    <ul class="checks">
+      <li><b>Quiz</b>: add a <code>quiz</code> block to a station (see ALICE). The stamp unlocks once the visitor has answered.</li>
+      <li><b>Widgets</b>: small interactive pieces in <code>widgets.js</code>. The pendulum station shows the example: a time bar that shows how many pins have fallen after a chosen number of hours. A new widget is one function in that file plus <code>widget: { type: "name" }</code> on the station.</li>
+    </ul>
+    <p>Ideas from the planning: draw a shape and watch it being 3D-printed, choose particles and see how the detector reacts, compare nerve signals with light and animals, move a "magnet" (your finger) over the arrow wall, and individual stamp artwork per station.</p>
+  </section>
+</main>
+
+<footer class="foot" id="foot">
+  <div class="foot-inner">
+    <span>A student science communication project · Im Neuenheimer Feld, Heidelberg</span>
+    <span class="foot-links"><a href="#guide">How this site works</a><a href="#qr">QR codes</a></span>
+  </div>
+</footer>
+
+<script src="vendor/qrcode.js"></script>
+<script src="stations.js"></script>
+<script src="widgets.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
