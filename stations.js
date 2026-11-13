@@ -26,7 +26,7 @@ const SITE = {
   place: "A campus trail · Im Neuenheimer Feld, Heidelberg",
 
   // One or two sentences under the title on the passport page.
-  intro: "Six exhibits in four physics buildings. Scan the QR code next to each one, find out what it shows, and collect its stamp in your passport.",
+  intro: "Six exhibits in four buildings. Scan the QR code next to each one, find out what it shows, and collect its stamp in your passport.",
 
   // The public address of the website once it is online, ending in "/".
   // Example: "https://our-group.github.io/behind-the-facade/"
